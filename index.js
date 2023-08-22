@@ -2,16 +2,19 @@ const express = require('express');
 const cors = require('cors');
 const csvParser = require('csv-parser');
 const fs = require('fs');
+require('dotenv').config();
+
 
 const mongoose = require('mongoose');
 const Intervention = require('./models/user');
 
 const app = express();
-const port = 3000;
+
+const port = process.env.PORT || 3000;;
 
 app.use(cors());
 
-mongoose.connect('mongodb+srv://emiledb:OsKNeLPtlbNDmXR0@smartopopdb.ikeph7x.mongodb.net/?retryWrites=true&w=majority');
+mongoose.connect("mongodb+srv://emiledb:OsKNeLPtlbNDmXR0@smartopopdb.ikeph7x.mongodb.net/?retryWrites=true&w=majority");
 
 const db = mongoose.connection;
 
@@ -21,6 +24,9 @@ db.once('open', async () => {
     console.log('Connected to MongoDB');
     
     const totalCount = await Intervention.countDocuments();
+    console.log(totalCount);
+    // if (totalCount > 0)
+    //     await Intervention.collection.drop();
     if (totalCount === 298)
         return console.log('Database already filled.');
 
