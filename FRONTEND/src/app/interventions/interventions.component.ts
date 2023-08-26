@@ -61,12 +61,14 @@ export class InterventionsComponent implements OnInit {
           mostIntervention : this.getMostFrequentIntervention(surgeon),
           preferedRoom : this.getMostFrequentRoom(surgeon)
         })).sort((a, b) => b.totalInterventions - a.totalInterventions);;
+        
       },
       (error) => {
         console.error('Error fetching interventions:', error);
       }
     );
   }
+
 
   getMostFrequentNurses(surgeonName: string): string {
 

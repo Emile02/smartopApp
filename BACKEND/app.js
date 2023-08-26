@@ -10,10 +10,9 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-// Connexion à la base de données
 connectDB();
 
-// Utilisation des routes
+
 app.use('/', routes);
 
 app.listen(port, () => {
