@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Intervention = require('../models/user');
+const Intervention = require('../models/totalDB');
 
 router.get('/', async (req, res) => {
     try {

@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Intervention = require('../models/totalDB');
+require('dotenv').config();
 
 const connectDB = async () => {
     try {

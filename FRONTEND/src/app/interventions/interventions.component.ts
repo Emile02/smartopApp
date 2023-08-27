@@ -12,18 +12,27 @@ export class InterventionsComponent implements OnInit {
   
   interventions: any[] = [];
   surgeonsInfos: any[] = [];
+
+  surgeonsArray: any[] = [];
   
   itemsToShowStart: number = 0;
   itemsToShowEnd: number = 10;
+
+  sliceStart: number = 0;
+  sliceEnd: number = 10;
   
   searchText: string = '';
   
   lookingForSurgeon: boolean = false;
+
+  highlightedRowIndex: number = -1;
+
   
   constructor(private interventionsService: InterventionsService) {}
 
   ngOnInit(): void {
     this.getInterventions();
+    this.getSurgeons(this.itemsToShowStart, this.itemsToShowEnd);
   }
 
   showMoreInterventions (): void {
@@ -33,7 +42,9 @@ export class InterventionsComponent implements OnInit {
       this.itemsToShowEnd += 7;
       else
       this.itemsToShowEnd += 10;
-    }
+  }
+  console.log(this.itemsToShowStart, this.itemsToShowEnd);
+  this.getSurgeons(this.itemsToShowStart, this.itemsToShowEnd);
   }
   
   showLessInterventions (): void {
@@ -43,10 +54,12 @@ export class InterventionsComponent implements OnInit {
         this.itemsToShowEnd -= 7;
         else
           this.itemsToShowEnd -= 10;
-    }
+      }
+      console.log(this.itemsToShowStart, this.itemsToShowEnd);
+    this.getSurgeons(this.itemsToShowStart, this.itemsToShowEnd);
   }
 
-  getInterventions(): void {
+  getInterventions(): any {
     this.interventionsService.getInterventions().subscribe(
       (data) => {
         this.interventions = data;
@@ -61,7 +74,14 @@ export class InterventionsComponent implements OnInit {
           mostIntervention : this.getMostFrequentIntervention(surgeon),
           preferedRoom : this.getMostFrequentRoom(surgeon)
         })).sort((a, b) => b.totalInterventions - a.totalInterventions);;
-        
+        this.interventionsService.sendDataToBackend(this.surgeonsInfos).subscribe(
+          (response) => {
+            console.log('Réponse du backend :', response);
+          },
+          error => {
+            console.error('Erreur lors de l\'envoi des données :', error);
+          }
+        );
       },
       (error) => {
         console.error('Error fetching interventions:', error);
@@ -69,6 +89,14 @@ export class InterventionsComponent implements OnInit {
     );
   }
 
+  getSurgeons(enter: any, end: any): any {    
+    this.interventionsService.getSurgeons(enter, end).subscribe(
+      (data) => {
+        this.surgeonsArray = data;
+        console.log(this.surgeonsArray.length); 
+      }
+    )
+  }
 
   getMostFrequentNurses(surgeonName: string): string {
 
@@ -169,23 +197,37 @@ export class InterventionsComponent implements OnInit {
 
   search(): void {
     if (this.searchText.trim() === '') {
-      this.getInterventions();
-      this.lookingForSurgeon = false;
-    } else {
-      this.itemsToShowStart = 0;
-      this.itemsToShowEnd = this.surgeonsInfos.length;
-      this.surgeonsInfos = this.surgeonsInfos.filter(intervention =>
-        intervention.surgeon.toLowerCase().includes(this.searchText.toLowerCase())
-        );
-      this.lookingForSurgeon = true;
       this.itemsToShowStart = 0;
       this.itemsToShowEnd = 10;
+      this.getSurgeons(this.itemsToShowStart, this.itemsToShowEnd);
+      this.lookingForSurgeon = false;
+    } else {
+      const foundSurgeon = this.surgeonsInfos.find(
+        surgeonData =>
+          surgeonData.surgeon.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+  
+      if (foundSurgeon) {
+        this.surgeonsArray = [foundSurgeon];
+        this.itemsToShowStart = 0;
+        this.itemsToShowEnd = 1;
+        this.lookingForSurgeon = true;
+      } else {
+        this.itemsToShowStart = 0;
+        this.itemsToShowEnd = 10;
+        this.getSurgeons(this.itemsToShowStart, this.itemsToShowEnd);
+        this.lookingForSurgeon = false;
+      }
     }
   }
-
+  
+  
   refresh(): void {
-      this.getInterventions();
-      this.lookingForSurgeon = false;
-      this.searchText = '';
-  }
+    this.itemsToShowStart = 0;
+    this.itemsToShowEnd = 10;
+    this.sliceEnd = 10;
+    this.getSurgeons(this.itemsToShowStart, this.itemsToShowEnd);
+    this.lookingForSurgeon = false;
+    this.searchText = '';
+  }  
 }

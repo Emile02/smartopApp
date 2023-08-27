@@ -1,3 +1,4 @@
+<!-- interventions.component.html -->
 <div class="container">
     <div class="search-bar">
       <input
@@ -33,14 +34,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let surgeonsInfo of surgeonsInfos.slice(itemsToShowStart, itemsToShowEnd)">
-              <td>{{ surgeonsInfo.surgeon }}</td>
-              <td>{{ surgeonsInfo.speciality }}</td>
-              <td>{{ surgeonsInfo.totalInterventions }}</td>
-              <td>{{ surgeonsInfo.anesthsiste }}</td>
-              <td>{{ surgeonsInfo.nurses }}</td>
-              <td>{{ surgeonsInfo.preferedRoom }}</td>
-              <td>{{ surgeonsInfo.mostIntervention }}</td>
+            <tr *ngFor="let surgeonsData of surgeonsArray.slice(sliceStart,sliceEnd)">
+              <td>{{ surgeonsData.surgeon }}</td>
+              <td>{{ surgeonsData.speciality }}</td>
+              <td>{{ surgeonsData.totalInterventions }}</td>
+              <td>{{ surgeonsData.anesthsiste }}</td>
+              <td>{{ surgeonsData.nurses }}</td>
+              <td>{{ surgeonsData.preferedRoom }}</td>
+              <td>{{ surgeonsData.mostIntervention }}</td>
             </tr>
           </tbody>
         </table>
