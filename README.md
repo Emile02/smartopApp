@@ -16,12 +16,14 @@ Vous trouverez les informations à copier dans le .env par mail.
 
 ```bash
   npm i
+  node app.js
 ```
 
 2ème terminal:
   ```bash
   cd FRONTEND
   npm i
+  ng serve
 ```
 
 **Maintenant rendez-vous sur l'url** http://localhost:4200/interventions pour découvrir mon travail !
